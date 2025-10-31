@@ -169,10 +169,11 @@ def test_simple_query():
     print(f"Context size: ~{len(context)} characters (~{len(context.split())} words)")
 
     rlm = RLM_REPL(
-        model="gpt-4o-mini",  # Cheap model for root LM
-        recursive_model="gpt-4o-mini",  # Same cheap model for sub-calls
+        model="claude-3-opus-20240229",  # Smart Claude Opus for root LM
+        recursive_model="claude-3-5-haiku-20241022",  # Fast, cheap Claude Haiku for sub-calls
         enable_logging=True,
-        max_iterations=5  # Limit iterations to control cost
+        max_iterations=5,  # Limit iterations to control cost
+        provider="anthropic"  # Use Anthropic/Claude
     )
 
     query = "Who is the highest paid employee and what project are they working on?"
@@ -196,10 +197,11 @@ def test_complex_analysis():
     print(f"Context size: ~{len(context)} characters")
 
     rlm = RLM_REPL(
-        model="gpt-4o-mini",
-        recursive_model="gpt-4o-mini",
+        model="claude-3-opus-20240229",  # Smart Claude Opus for root LM
+        recursive_model="claude-3-5-haiku-20241022",  # Fast, cheap Claude Haiku for sub-calls
         enable_logging=True,
-        max_iterations=8  # More iterations for complex task
+        max_iterations=8,  # More iterations for complex task
+        provider="anthropic"  # Use Anthropic/Claude
     )
 
     query = """Identify all employees recommended for promotion and calculate:
@@ -228,7 +230,7 @@ def main():
 ║  across multiple documents using recursive sub-calls.                      ║
 ║                                                                            ║
 ║  Cost Control:                                                             ║
-║  - Using gpt-4o-mini (~$0.15/$0.60 per 1M tokens)                        ║
+║  - Using Claude 3.5 Sonnet + Haiku (Anthropic models)                     ║
 ║  - Small context (~1000 lines vs 1M in original)                          ║
 ║  - Limited iterations (5-8 vs unlimited)                                   ║
 ║                                                                            ║

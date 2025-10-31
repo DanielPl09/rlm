@@ -2,11 +2,12 @@
 Simple Recursive Language Model (RLM) with REPL environment.
 """
 
-from typing import Dict, List, Optional, Any 
+from typing import Dict, List, Optional, Any
 
 from rlm import RLM
 from rlm.repl import REPLEnv
 from rlm.utils.llm import OpenAIClient
+from rlm.utils.anthropic_llm import AnthropicClient
 from rlm.utils.prompts import DEFAULT_QUERY, next_action_prompt, build_system_prompt
 import rlm.utils.utils as utils
 
@@ -19,18 +20,27 @@ class RLM_REPL(RLM):
     LLM Client that can handle long contexts by recursively calling itself.
     """
     
-    def __init__(self, 
-                 api_key: Optional[str] = None, 
-                 model: str = "gpt-5",
-                 recursive_model: str = "gpt-5",
+    def __init__(self,
+                 api_key: Optional[str] = None,
+                 model: str = "claude-3-opus-20240229",
+                 recursive_model: str = "claude-3-5-haiku-20241022",
                  max_iterations: int = 20,
                  depth: int = 0,
                  enable_logging: bool = False,
+                 provider: str = "anthropic",  # "anthropic" or "openai"
                  ):
         self.api_key = api_key
         self.model = model
         self.recursive_model = recursive_model
-        self.llm = OpenAIClient(api_key, model) # Replace with other client
+        self.provider = provider
+
+        # Initialize the appropriate client based on provider
+        if provider == "anthropic":
+            self.llm = AnthropicClient(api_key, model)
+        elif provider == "openai":
+            self.llm = OpenAIClient(api_key, model)
+        else:
+            raise ValueError(f"Unknown provider: {provider}. Must be 'anthropic' or 'openai'")
         
         # Track recursive call depth to prevent infinite loops
         self.repl_env = None
@@ -66,9 +76,11 @@ class RLM_REPL(RLM):
         context_data, context_str = utils.convert_context_for_repl(context)
         
         self.repl_env = REPLEnv(
-            context_json=context_data, 
-            context_str=context_str, 
+            context_json=context_data,
+            context_str=context_str,
             recursive_model=self.recursive_model,
+            provider=self.provider,
+            api_key=self.api_key,
         )
         
         return self.messages
