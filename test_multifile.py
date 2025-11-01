@@ -172,7 +172,7 @@ def test_simple_query():
         model="claude-3-opus-20240229",  # Smart Claude Opus for root LM
         recursive_model="claude-3-5-haiku-20241022",  # Fast, cheap Claude Haiku for sub-calls
         enable_logging=True,
-        max_iterations=5,  # Limit iterations to control cost
+        max_iterations=15,  # More iterations to show real refinement
         provider="anthropic"  # Use Anthropic/Claude
     )
 
