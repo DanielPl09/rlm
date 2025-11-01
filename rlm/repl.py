@@ -14,18 +14,28 @@ from rlm import RLM
 # Simple sub LM for REPL environment. Note: This could also be just the RLM itself!
 class Sub_RLM(RLM):
     """Recursive LLM client for REPL environment with fixed configuration."""
-    
-    def __init__(self, model: str = "gpt-5"):
-        # Configuration - model can be specified
-        self.api_key = os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            raise ValueError("OPENAI_API_KEY environment variable is required")
-        
-        self.model = model
 
-        # Initialize OpenAI client
-        from rlm.utils.llm import OpenAIClient
-        self.client = OpenAIClient(api_key=self.api_key, model=model)
+    def __init__(self, model: str = "claude-sonnet", provider: str = "anthropic"):
+        # Configuration - model and provider can be specified
+        self.model = model
+        self.provider = provider
+
+        if provider == "anthropic":
+            self.api_key = os.getenv("ANTHROPIC_API_KEY")
+            if not self.api_key:
+                raise ValueError("ANTHROPIC_API_KEY environment variable is required")
+
+            # Initialize Anthropic client
+            from rlm.utils.anthropic_client import AnthropicClient
+            self.client = AnthropicClient(api_key=self.api_key, model=model)
+        else:
+            # Fallback to OpenAI
+            self.api_key = os.getenv("OPENAI_API_KEY")
+            if not self.api_key:
+                raise ValueError("OPENAI_API_KEY environment variable is required")
+
+            from rlm.utils.llm import OpenAIClient
+            self.client = OpenAIClient(api_key=self.api_key, model=model)
         
     
     def completion(self, prompt) -> str:
@@ -71,20 +81,21 @@ class REPLResult:
 class REPLEnv:
     def __init__(
         self,
-        recursive_model: str = "gpt-5-mini",
+        recursive_model: str = "claude-sonnet",
         context_json: Optional[dict | list] = None,
         context_str: Optional[str] = None,
         setup_code: str = None,
+        provider: str = "anthropic",
     ):
         # Store the original working directory
         self.original_cwd = os.getcwd()
-        
+
         # Create temporary directory (but don't change global working directory)
         self.temp_dir = tempfile.mkdtemp(prefix="repl_env_")
 
 
         # Initialize minimal RLM / LM client. Change this to support more depths.
-        self.sub_rlm: RLM = Sub_RLM(model=recursive_model)
+        self.sub_rlm: RLM = Sub_RLM(model=recursive_model, provider=provider)
         
         # Create safe globals with only string-safe built-ins
         self.globals = {

@@ -86,10 +86,11 @@ def main():
 
     # Create RLM instance with logging enabled
     rlm = RLM_REPL(
-        model="gpt-5-nano",  # Fast model for root planning
-        recursive_model="gpt-5",  # Powerful model for sub-queries
+        model="claude-haiku",  # Fast model for root planning (Claude 3.5 Haiku)
+        recursive_model="claude-sonnet",  # Powerful model for sub-queries (Claude Sonnet 4.5)
         enable_logging=True,  # Enable built-in logger
-        max_iterations=15,
+        max_iterations=20,  # Allow more iterations for complex multi-step reasoning
+        provider="anthropic",  # Use Anthropic Claude API
     )
 
     # Create overlapping articles as context
@@ -97,13 +98,16 @@ def main():
 
     # The query requires synthesizing information across overlapping articles
     query = """
+    The context variable is a LIST of 3 article texts. Each article contains overlapping but distinct information.
+
     Based on the conference articles provided, create a comprehensive summary that includes:
     1. What was the main breakthrough announced?
     2. Who announced it and what are the technical details?
     3. What is the significance and potential applications?
     4. What are the conference logistics (dates, location, attendance)?
 
-    Use sub-RLM calls to analyze each article separately, then combine the best information.
+    STRATEGY: Use sub-RLM calls (llm_query) to analyze each article in the list separately,
+    storing results in variables. Then combine all results for the final comprehensive answer.
     """
 
     print("Context: 3 overlapping news articles about TechConf 2025")
@@ -130,8 +134,15 @@ def main():
     print("COST SUMMARY")
     print("=" * 80)
     print(f"Total Cost: ${cost.get('total_cost', 0):.4f}")
-    print(f"Root Model Cost: ${cost.get('root_cost', 0):.4f}")
-    print(f"Sub-LLM Cost: ${cost.get('sub_llm_cost', 0):.4f}")
+    print(f"Total Tokens: {cost.get('total_tokens', 0):,}")
+    print()
+    print(f"Root Model (Claude Haiku):")
+    print(f"  - Cost: ${cost.get('root_cost', 0):.4f}")
+    print(f"  - Tokens: {cost.get('root_tokens', 0):,}")
+    print()
+    print(f"Sub-LLM (Claude Sonnet 4.5):")
+    print(f"  - Cost: ${cost.get('sub_llm_cost', 0):.4f}")
+    print(f"  - Tokens: {cost.get('sub_llm_tokens', 0):,}")
     print()
 
 

@@ -6,7 +6,6 @@ from typing import Dict, List, Optional, Any
 
 from rlm import RLM
 from rlm.repl import REPLEnv
-from rlm.utils.llm import OpenAIClient
 from rlm.utils.prompts import DEFAULT_QUERY, next_action_prompt, build_system_prompt
 import rlm.utils.utils as utils
 
@@ -18,19 +17,28 @@ class RLM_REPL(RLM):
     """
     LLM Client that can handle long contexts by recursively calling itself.
     """
-    
-    def __init__(self, 
-                 api_key: Optional[str] = None, 
-                 model: str = "gpt-5",
-                 recursive_model: str = "gpt-5",
+
+    def __init__(self,
+                 api_key: Optional[str] = None,
+                 model: str = "claude-sonnet",
+                 recursive_model: str = "claude-sonnet",
                  max_iterations: int = 20,
                  depth: int = 0,
                  enable_logging: bool = False,
+                 provider: str = "anthropic",
                  ):
         self.api_key = api_key
         self.model = model
         self.recursive_model = recursive_model
-        self.llm = OpenAIClient(api_key, model) # Replace with other client
+        self.provider = provider
+
+        # Initialize the appropriate LLM client
+        if provider == "anthropic":
+            from rlm.utils.anthropic_client import AnthropicClient
+            self.llm = AnthropicClient(api_key, model)
+        else:
+            from rlm.utils.llm import OpenAIClient
+            self.llm = OpenAIClient(api_key, model)
         
         # Track recursive call depth to prevent infinite loops
         self.repl_env = None
@@ -64,11 +72,12 @@ class RLM_REPL(RLM):
         
         # Initialize REPL environment with context data
         context_data, context_str = utils.convert_context_for_repl(context)
-        
+
         self.repl_env = REPLEnv(
-            context_json=context_data, 
-            context_str=context_str, 
+            context_json=context_data,
+            context_str=context_str,
             recursive_model=self.recursive_model,
+            provider=self.provider,
         )
         
         return self.messages
@@ -122,11 +131,36 @@ class RLM_REPL(RLM):
     
     def cost_summary(self) -> Dict[str, Any]:
         """Get the cost summary of the Root LM + Sub-RLM Calls."""
-        raise NotImplementedError("Cost tracking not implemented for RLM REPL.")
+        root_cost_info = {}
+        sub_llm_cost_info = {}
+
+        # Get root LLM cost
+        if hasattr(self.llm, 'get_cost_summary'):
+            root_cost_info = self.llm.get_cost_summary()
+
+        # Get sub-LLM cost if REPL env exists
+        if self.repl_env and hasattr(self.repl_env.sub_rlm, 'client'):
+            if hasattr(self.repl_env.sub_rlm.client, 'get_cost_summary'):
+                sub_llm_cost_info = self.repl_env.sub_rlm.client.get_cost_summary()
+
+        # Combine costs
+        total_cost = root_cost_info.get('total_cost', 0) + sub_llm_cost_info.get('total_cost', 0)
+
+        return {
+            'root_cost': root_cost_info.get('total_cost', 0),
+            'root_tokens': root_cost_info.get('total_tokens', 0),
+            'sub_llm_cost': sub_llm_cost_info.get('total_cost', 0),
+            'sub_llm_tokens': sub_llm_cost_info.get('total_tokens', 0),
+            'total_cost': total_cost,
+            'total_tokens': root_cost_info.get('total_tokens', 0) + sub_llm_cost_info.get('total_tokens', 0),
+        }
 
     def reset(self):
         """Reset the (REPL) environment and message history."""
-        self.repl_env = REPLEnv()
+        self.repl_env = REPLEnv(
+            recursive_model=self.recursive_model,
+            provider=self.provider,
+        )
         self.messages = []
         self.query = None
 
