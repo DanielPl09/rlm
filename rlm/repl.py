@@ -16,33 +16,53 @@ class Sub_RLM(RLM):
     """Recursive LLM client for REPL environment with fixed configuration."""
     
     def __init__(self, model: str = "gpt-5"):
-        # Configuration - model can be specified
-        self.api_key = os.getenv("OPENAI_API_KEY")
-        if not self.api_key:
-            raise ValueError("OPENAI_API_KEY environment variable is required")
-        
         self.model = model
 
-        # Initialize OpenAI client
-        from rlm.utils.llm import OpenAIClient
-        self.client = OpenAIClient(api_key=self.api_key, model=model)
+        # Try Anthropic first, fall back to OpenAI
+        anthropic_key = os.getenv("ANTHROPIC_API_KEY")
+        openai_key = os.getenv("OPENAI_API_KEY")
+
+        if anthropic_key and "claude" in model.lower():
+            from rlm.utils.anthropic_client import AnthropicClient
+            self.client = AnthropicClient(api_key=anthropic_key, model=model)
+            self.api_key = anthropic_key
+        elif openai_key:
+            from rlm.utils.llm import OpenAIClient
+            self.client = OpenAIClient(api_key=openai_key, model=model)
+            self.api_key = openai_key
+        else:
+            raise ValueError("ANTHROPIC_API_KEY or OPENAI_API_KEY environment variable is required")
         
     
     def completion(self, prompt) -> str:
         """
-        Simple LM query for sub-LM call.
+        Simple LM query for sub-LM call with logging.
         """
+        # Log the sub-call
+        print("\n" + "="*80)
+        print(f"🔄 SUB-CALL to {self.model}")
+        print("="*80)
+        prompt_preview = str(prompt)[:200] + "..." if len(str(prompt)) > 200 else str(prompt)
+        print(f"📝 Prompt Preview: {prompt_preview}")
+        print("-"*80)
+
         try:
             # Handle both string and dictionary/list inputs
             response = self.client.completion(
                 messages=prompt,
                 timeout=300
             )
-            
+
+            response_preview = response[:200] + "..." if len(response) > 200 else response
+            print(f"✅ Response Preview: {response_preview}")
+            print("="*80 + "\n")
+
             return response
-                
+
         except Exception as e:
             error_msg = f"Error making LLM query: {str(e)}"
+            print(f"❌ Error: {error_msg}")
+            print("="*80 + "\n")
             return error_msg
     
     def cost_summary(self) -> dict[str, float]:

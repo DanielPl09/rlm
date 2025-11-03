@@ -19,8 +19,8 @@ class RLM_REPL(RLM):
     LLM Client that can handle long contexts by recursively calling itself.
     """
     
-    def __init__(self, 
-                 api_key: Optional[str] = None, 
+    def __init__(self,
+                 api_key: Optional[str] = None,
                  model: str = "gpt-5",
                  recursive_model: str = "gpt-5",
                  max_iterations: int = 20,
@@ -30,7 +30,13 @@ class RLM_REPL(RLM):
         self.api_key = api_key
         self.model = model
         self.recursive_model = recursive_model
-        self.llm = OpenAIClient(api_key, model) # Replace with other client
+
+        # Support both OpenAI and Anthropic
+        if "claude" in model.lower():
+            from rlm.utils.anthropic_client import AnthropicClient
+            self.llm = AnthropicClient(api_key, model)
+        else:
+            self.llm = OpenAIClient(api_key, model)
         
         # Track recursive call depth to prevent infinite loops
         self.repl_env = None
