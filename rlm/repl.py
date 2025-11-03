@@ -14,33 +14,58 @@ from rlm import RLM
 # Simple sub LM for REPL environment. Note: This could also be just the RLM itself!
 class Sub_RLM(RLM):
     """Recursive LLM client for REPL environment with fixed configuration."""
-    
-    def __init__(self, model: str = "gpt-5"):
+
+    def __init__(self, model: str = "gpt-5", context_slices: dict = None):
         # Configuration - model can be specified
         self.api_key = os.getenv("OPENAI_API_KEY")
         if not self.api_key:
             raise ValueError("OPENAI_API_KEY environment variable is required")
-        
+
         self.model = model
+        self.context_slices = context_slices or {}
 
         # Initialize OpenAI client
         from rlm.utils.llm import OpenAIClient
         self.client = OpenAIClient(api_key=self.api_key, model=model)
-        
-    
-    def completion(self, prompt) -> str:
+
+
+    def completion(self, prompt, ctx_slice_id: str = None) -> str:
         """
-        Simple LM query for sub-LM call.
+        Simple LM query for sub-LM call with optional context slice.
+
+        Args:
+            prompt: The prompt to send to the LLM (string or list of messages)
+            ctx_slice_id: Optional ID of context slice to include with the query
+
+        Returns:
+            String response from the LLM
         """
         try:
+            # Build messages with optional context slice
+            if isinstance(prompt, str):
+                messages = [{"role": "user", "content": prompt}]
+            else:
+                messages = prompt
+
+            # If a context slice is specified, prepend it to the messages
+            if ctx_slice_id and ctx_slice_id in self.context_slices:
+                slice_obj = self.context_slices[ctx_slice_id]
+                context_content = f"Context slice '{ctx_slice_id}':\n{json.dumps(slice_obj.content, indent=2) if isinstance(slice_obj.content, (dict, list)) else slice_obj.content}\n\n"
+
+                # Add context before the user's prompt
+                if messages and messages[0]["role"] == "user":
+                    messages[0]["content"] = context_content + messages[0]["content"]
+                else:
+                    messages.insert(0, {"role": "user", "content": context_content})
+
             # Handle both string and dictionary/list inputs
             response = self.client.completion(
-                messages=prompt,
+                messages=messages,
                 timeout=300
             )
-            
+
             return response
-                
+
         except Exception as e:
             error_msg = f"Error making LLM query: {str(e)}"
             return error_msg
@@ -75,17 +100,24 @@ class REPLEnv:
         context_json: Optional[dict | list] = None,
         context_str: Optional[str] = None,
         setup_code: str = None,
+        context_slices: Optional[dict] = None,
     ):
         # Store the original working directory
         self.original_cwd = os.getcwd()
-        
+
         # Create temporary directory (but don't change global working directory)
         self.temp_dir = tempfile.mkdtemp(prefix="repl_env_")
 
+        # Store context slices for slice-based querying
+        self.context_slices = context_slices or {}
+
+        # Initialize hypothesis tracking for iterative refinement
+        self.hypothesis = ""
+        self.hypothesis_history = []
 
         # Initialize minimal RLM / LM client. Change this to support more depths.
-        self.sub_rlm: RLM = Sub_RLM(model=recursive_model)
-        
+        self.sub_rlm: RLM = Sub_RLM(model=recursive_model, context_slices=self.context_slices)
+
         # Create safe globals with only string-safe built-ins
         self.globals = {
             '__builtins__': {
@@ -165,14 +197,71 @@ class REPLEnv:
         self.stderr_buffer = io.StringIO()
 
         self.load_context(context_json, context_str)
-        
-        def llm_query(prompt: str) -> str:
-            """Query the LLM with the given prompt."""
-            return self.sub_rlm.completion(prompt)
-        
+
+        def llm_query(prompt: str, slice_id: str = None) -> str:
+            """
+            Query the LLM with the given prompt and optional context slice.
+
+            Args:
+                prompt: The prompt to send to the LLM
+                slice_id: Optional ID of context slice to include with query
+
+            Returns:
+                String response from the LLM
+            """
+            return self.sub_rlm.completion(prompt, ctx_slice_id=slice_id)
+
         # Add (R)LM query function to globals
         self.globals['llm_query'] = llm_query
-        
+
+        # Add context slice helper functions
+        def list_slices() -> list:
+            """List all available context slice IDs."""
+            return list(self.context_slices.keys())
+
+        def get_slice_info() -> list:
+            """Get information about all context slices."""
+            return [
+                {
+                    "slice_id": slice_id,
+                    "metadata": slice_obj.metadata,
+                    "content_type": type(slice_obj.content).__name__,
+                    "content_size": len(str(slice_obj.content))
+                }
+                for slice_id, slice_obj in self.context_slices.items()
+            ]
+
+        # Add hypothesis tracking functions
+        def update_hypothesis(new_hypothesis: str) -> str:
+            """
+            Update the shared hypothesis based on new information.
+            Each sub_RLM call should refine the hypothesis.
+
+            Args:
+                new_hypothesis: The updated hypothesis text
+
+            Returns:
+                Confirmation message
+            """
+            self.hypothesis_history.append(self.hypothesis)
+            self.hypothesis = new_hypothesis
+            return f"Hypothesis updated. Previous versions: {len(self.hypothesis_history)}"
+
+        def get_hypothesis() -> str:
+            """Get the current hypothesis."""
+            return self.hypothesis
+
+        def get_hypothesis_history() -> list:
+            """Get the history of all hypothesis updates."""
+            return self.hypothesis_history
+
+        # Add all helper functions to globals
+        self.globals['list_slices'] = list_slices
+        self.globals['get_slice_info'] = get_slice_info
+        self.globals['update_hypothesis'] = update_hypothesis
+        self.globals['get_hypothesis'] = get_hypothesis
+        self.globals['get_hypothesis_history'] = get_hypothesis_history
+
         # Add FINAL_VAR function to globals
         def final_var(variable_name: str) -> str:
             """
@@ -190,7 +279,7 @@ class REPLEnv:
                     return f"Error: Variable '{variable_name}' not found in REPL environment"
             except Exception as e:
                 return f"Error retrieving variable '{variable_name}': {str(e)}"
-        
+
         self.globals['FINAL_VAR'] = final_var
         
         # Finally, run any setup code if provided

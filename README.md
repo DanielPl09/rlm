@@ -15,6 +15,33 @@ We have all the basic dependencies in `requirements.txt`, although none are real
 
 In `main.py`, we have a basic needle-in-the-haystack (NIAH) example that embeds a random number inside ~1M lines of random words, and asks the model to go find it. It's a silly Hello World type example to emphasize that `RLM.completion()` calls are meant to replace `LM.completion()` calls.
 
+## New: Query-Driven Iterative Refinement
+
+RLM now supports **query-driven iterative refinement** over pre-segmented context chunks. For a single user query, the REPL orchestrates multiple `sub_RLM(query, ctx_slice_id)` calls over distinct context slices, enabling:
+
+- **Context slicing**: Automatic chunking of context into manageable pieces (dicts → per-key, lists → per-item/chunks, strings → by markdown sections or character count)
+- **Slice-based querying**: `llm_query(prompt, slice_id)` to query specific context chunks
+- **Hypothesis tracking**: Maintain and refine a shared hypothesis across multiple sub_RLM calls
+- **Iterative aggregation**: Build up the final answer incrementally by processing each slice
+
+**Example workflow**:
+```python
+# Context automatically sliced into chunks
+slices = list_slices()  # ['dict_docs', 'dict_code', 'dict_chat']
+
+# Initialize and iteratively refine hypothesis
+update_hypothesis("Initial understanding...")
+for slice_id in slices:
+    result = llm_query("Extract relevant info", slice_id=slice_id)
+    refined = llm_query(f"Current: {get_hypothesis()}\nNew: {result}\nRefine:")
+    update_hypothesis(refined)
+
+# Final answer is the refined hypothesis
+FINAL(get_hypothesis())
+```
+
+See **[docs/QUERY_DRIVEN_REFINEMENT.md](docs/QUERY_DRIVEN_REFINEMENT.md)** for full documentation and **[examples/example_slice_refinement.py](examples/example_slice_refinement.py)** for usage examples.
+
 ## Code Structure
 In the `rlm/` folder, the two main files are `rlm_repl.py` and `repl.py`. 
 * `rlm_repl.py` offers a basic implementation of an RLM using a REPL environment in the `RLM_REPL` class. The `completion()` function gets called when we query an RLM.

@@ -11,11 +11,52 @@ REPL_SYSTEM_PROMPT = """You are tasked with answering a query with associated co
 
 The REPL environment is initialized with:
 1. A `context` variable that contains extremely important information about your query. You should check the content of the `context` variable to understand what you are working with. Make sure you look through it sufficiently as you answer your query.
-2. A `llm_query` function that allows you to query an LLM (that can handle around 500K chars) inside your REPL environment.
-3. The ability to use `print()` statements to view the output of your REPL code and continue your reasoning.
+2. A `llm_query(prompt, slice_id=None)` function that allows you to query an LLM (that can handle around 500K chars) inside your REPL environment. You can optionally pass a `slice_id` to query with only that specific context slice.
+3. Context slice helper functions for iterative refinement:
+   - `list_slices()`: Returns list of available context slice IDs
+   - `get_slice_info()`: Returns detailed info about all slices (metadata, size, type)
+4. Hypothesis tracking functions for iterative refinement:
+   - `update_hypothesis(new_hypothesis)`: Update the shared hypothesis based on new findings
+   - `get_hypothesis()`: Get the current hypothesis
+   - `get_hypothesis_history()`: Get all previous hypothesis versions
+5. The ability to use `print()` statements to view the output of your REPL code and continue your reasoning.
+
+## Query-Driven Iterative Refinement Strategy
+
+For complex queries, the context has been PRE-SEGMENTED into chunks. You should use this ITERATIVE REFINEMENT workflow:
+
+1. **Discover slices**: Call `list_slices()` or `get_slice_info()` to see available context chunks
+2. **Initialize hypothesis**: Set an initial hypothesis with `update_hypothesis("initial answer or understanding")`
+3. **Query per slice**: For each relevant slice, call `llm_query(your_question, slice_id=slice_id)` to get findings from that chunk
+4. **Refine hypothesis**: After each sub_RLM response, call `update_hypothesis(refined_answer)` to incorporate new information
+5. **Aggregate results**: Once all relevant slices are queried, use the final hypothesis as your answer
+
+Example workflow:
+```repl
+# Step 1: Check available slices
+slices = list_slices()
+print(f"Available slices: {slices}")
+
+# Step 2: Initialize hypothesis
+update_hypothesis("Initial understanding: investigating the question")
+
+# Step 3: Query each slice and refine
+results = []
+for slice_id in slices:
+    result = llm_query(f"Based on this context, what information relates to [your question]?", slice_id=slice_id)
+    results.append(result)
+
+    # Refine hypothesis after each finding
+    current = get_hypothesis()
+    updated = llm_query(f"Current hypothesis: {current}\\n\\nNew finding: {result}\\n\\nProvide refined hypothesis:")
+    update_hypothesis(updated)
+    print(f"Updated hypothesis after {slice_id}")
+
+# Step 4: Final answer is the refined hypothesis
+final_answer = get_hypothesis()
+```
 
 You will only be able to see truncated outputs from the REPL environment, so you should use the query LLM function on variables you want to analyze. You will find this function especially useful when you have to analyze the semantics of the context. Use these variables as buffers to build up your final answer.
-Make sure to explicitly look through the entire context in REPL before answering your query. An example strategy is to first look at the context and figure out a chunking strategy, then break up the context into smart chunks, and query an LLM per chunk with a particular question and save the answers to a buffer, then query an LLM with all the buffers to produce your final answer.
 
 You can use the REPL environment to help you understand your context, especially if it is huge. Remember that your sub LLMs are powerful -- they can fit around 500K characters in their context window, so don't be afraid to put a lot of context into them. For example, a viable strategy is to feed 10 documents per sub-LLM query. Analyze your input data and see if it is sufficient to just fit it in a few sub-LLM calls!
 
