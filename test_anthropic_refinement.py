@@ -44,7 +44,7 @@ def test_refinement_with_anthropic(api_key: str):
     print("\n" + "="*80)
     print("STEP 2: Initializing Anthropic Client")
     print("="*80)
-    client = AnthropicClient(api_key=api_key, model="claude-3-5-sonnet-20240620")
+    client = AnthropicClient(api_key=api_key, model="claude-3-opus-20240229")
     print("✅ Client initialized")
 
     # Step 3: Simulate the iterative refinement workflow
