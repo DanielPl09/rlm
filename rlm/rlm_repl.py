@@ -74,7 +74,8 @@ class RLM_REPL(RLM):
             slice_input = context_data if context_data is not None else context_str
             if slice_input is not None:
                 context_slices = ContextSlicer.auto_slice_context(slice_input)
-                self.logger.log_message(f"Created {len(context_slices)} context slices for iterative refinement")
+                if self.logger.enabled:
+                    print(f"📎 Created {len(context_slices)} context slices for iterative refinement")
 
         self.repl_env = REPLEnv(
             context_json=context_data,
