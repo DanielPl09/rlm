@@ -1,0 +1,472 @@
+{
+  "experiment_info": {
+    "timestamp": "20251105_222917",
+    "type": "simulation",
+    "num_examples": 3,
+    "note": "This is simulated data demonstrating expected results"
+  },
+  "aggregate_stats": {
+    "total_traces": 3,
+    "avg_final_f1": 0.3333333333333333,
+    "avg_final_em": 0.0,
+    "avg_total_time": 0.06415971120198567,
+    "avg_total_calls": 11.0,
+    "avg_f1_at_20pct_time": 1.0,
+    "avg_em_at_20pct_time": 1.0,
+    "avg_f1_at_20pct_calls": 1.0,
+    "avg_em_at_20pct_calls": 1.0,
+    "efficiency_ratio_time": 3.0,
+    "efficiency_ratio_calls": 3.0
+  },
+  "individual_results": [
+    {
+      "question": "What is the capital of the country where the Eiffel Tower is located?",
+      "ground_truth": "Paris",
+      "predicted_answer": "Paris (based on context analysis)",
+      "total_time": 25.541425110744214,
+      "num_iterations": 11
+    },
+    {
+      "question": "Which company did the creator of SpaceX found before Tesla?",
+      "ground_truth": "PayPal",
+      "predicted_answer": "PayPal (based on context analysis)",
+      "total_time": 24.31323909674401,
+      "num_iterations": 11
+    },
+    {
+      "question": "How many Academy Awards did the director of Inception win?",
+      "ground_truth": "1",
+      "predicted_answer": "1 (based on context analysis)",
+      "total_time": 22.722326892046944,
+      "num_iterations": 11
+    }
+  ],
+  "traces": [
+    {
+      "question": "What is the capital of the country where the Eiffel Tower is located?",
+      "ground_truth": "Paris",
+      "final_answer": "Paris (based on context analysis)",
+      "total_time": 0.15266108512878418,
+      "total_iterations": 11,
+      "total_sub_rlm_calls": 11,
+      "checkpoints": [
+        {
+          "iteration": 1,
+          "sub_rlm_calls": 1,
+          "cumulative_time": 0.1309795379638672,
+          "current_hypothesis": "Need more information to answer",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.0,
+            "partial_match": 0.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 2,
+          "sub_rlm_calls": 2,
+          "cumulative_time": 0.13326382637023926,
+          "current_hypothesis": "Paris",
+          "metrics": {
+            "exact_match": 1.0,
+            "f1": 1.0,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 3,
+          "sub_rlm_calls": 3,
+          "cumulative_time": 0.13543295860290527,
+          "current_hypothesis": "Paris",
+          "metrics": {
+            "exact_match": 1.0,
+            "f1": 1.0,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 4,
+          "sub_rlm_calls": 4,
+          "cumulative_time": 0.13758397102355957,
+          "current_hypothesis": "Paris",
+          "metrics": {
+            "exact_match": 1.0,
+            "f1": 1.0,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 5,
+          "sub_rlm_calls": 5,
+          "cumulative_time": 0.13975977897644043,
+          "current_hypothesis": "Paris (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 6,
+          "sub_rlm_calls": 6,
+          "cumulative_time": 0.14188027381896973,
+          "current_hypothesis": "Paris (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 7,
+          "sub_rlm_calls": 7,
+          "cumulative_time": 0.1440563201904297,
+          "current_hypothesis": "Paris (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 8,
+          "sub_rlm_calls": 8,
+          "cumulative_time": 0.1462266445159912,
+          "current_hypothesis": "Paris (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 9,
+          "sub_rlm_calls": 9,
+          "cumulative_time": 0.14834952354431152,
+          "current_hypothesis": "Paris (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 10,
+          "sub_rlm_calls": 10,
+          "cumulative_time": 0.15049171447753906,
+          "current_hypothesis": "Paris (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 11,
+          "sub_rlm_calls": 11,
+          "cumulative_time": 0.15266108512878418,
+          "current_hypothesis": "Paris (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": "Paris (based on context analysis)"
+        }
+      ]
+    },
+    {
+      "question": "Which company did the creator of SpaceX found before Tesla?",
+      "ground_truth": "PayPal",
+      "final_answer": "PayPal (based on context analysis)",
+      "total_time": 0.02132892608642578,
+      "total_iterations": 11,
+      "total_sub_rlm_calls": 11,
+      "checkpoints": [
+        {
+          "iteration": 1,
+          "sub_rlm_calls": 1,
+          "cumulative_time": 0.001890420913696289,
+          "current_hypothesis": "Need more information to answer",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.0,
+            "partial_match": 0.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 2,
+          "sub_rlm_calls": 2,
+          "cumulative_time": 0.004057884216308594,
+          "current_hypothesis": "PayPal",
+          "metrics": {
+            "exact_match": 1.0,
+            "f1": 1.0,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 3,
+          "sub_rlm_calls": 3,
+          "cumulative_time": 0.006211519241333008,
+          "current_hypothesis": "PayPal",
+          "metrics": {
+            "exact_match": 1.0,
+            "f1": 1.0,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 4,
+          "sub_rlm_calls": 4,
+          "cumulative_time": 0.008378028869628906,
+          "current_hypothesis": "PayPal (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 5,
+          "sub_rlm_calls": 5,
+          "cumulative_time": 0.010501623153686523,
+          "current_hypothesis": "PayPal (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 6,
+          "sub_rlm_calls": 6,
+          "cumulative_time": 0.012672185897827148,
+          "current_hypothesis": "PayPal (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 7,
+          "sub_rlm_calls": 7,
+          "cumulative_time": 0.014811515808105469,
+          "current_hypothesis": "PayPal (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 8,
+          "sub_rlm_calls": 8,
+          "cumulative_time": 0.01596999168395996,
+          "current_hypothesis": "PayPal (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 9,
+          "sub_rlm_calls": 9,
+          "cumulative_time": 0.0172426700592041,
+          "current_hypothesis": "PayPal (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 10,
+          "sub_rlm_calls": 10,
+          "cumulative_time": 0.019159555435180664,
+          "current_hypothesis": "PayPal (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 11,
+          "sub_rlm_calls": 11,
+          "cumulative_time": 0.02132892608642578,
+          "current_hypothesis": "PayPal (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": "PayPal (based on context analysis)"
+        }
+      ]
+    },
+    {
+      "question": "How many Academy Awards did the director of Inception win?",
+      "ground_truth": "1",
+      "final_answer": "1 (based on context analysis)",
+      "total_time": 0.01848912239074707,
+      "total_iterations": 11,
+      "total_sub_rlm_calls": 11,
+      "checkpoints": [
+        {
+          "iteration": 1,
+          "sub_rlm_calls": 1,
+          "cumulative_time": 0.0019757747650146484,
+          "current_hypothesis": "Need more information to answer",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.0,
+            "partial_match": 0.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 2,
+          "sub_rlm_calls": 2,
+          "cumulative_time": 0.003122091293334961,
+          "current_hypothesis": "1",
+          "metrics": {
+            "exact_match": 1.0,
+            "f1": 1.0,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 3,
+          "sub_rlm_calls": 3,
+          "cumulative_time": 0.004292964935302734,
+          "current_hypothesis": "1",
+          "metrics": {
+            "exact_match": 1.0,
+            "f1": 1.0,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 4,
+          "sub_rlm_calls": 4,
+          "cumulative_time": 0.0063686370849609375,
+          "current_hypothesis": "1",
+          "metrics": {
+            "exact_match": 1.0,
+            "f1": 1.0,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 5,
+          "sub_rlm_calls": 5,
+          "cumulative_time": 0.007491350173950195,
+          "current_hypothesis": "1 (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 6,
+          "sub_rlm_calls": 6,
+          "cumulative_time": 0.00967550277709961,
+          "current_hypothesis": "1 (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 7,
+          "sub_rlm_calls": 7,
+          "cumulative_time": 0.010838985443115234,
+          "current_hypothesis": "1 (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 8,
+          "sub_rlm_calls": 8,
+          "cumulative_time": 0.01301717758178711,
+          "current_hypothesis": "1 (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 9,
+          "sub_rlm_calls": 9,
+          "cumulative_time": 0.015206098556518555,
+          "current_hypothesis": "1 (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 10,
+          "sub_rlm_calls": 10,
+          "cumulative_time": 0.01735830307006836,
+          "current_hypothesis": "1 (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": null
+        },
+        {
+          "iteration": 11,
+          "sub_rlm_calls": 11,
+          "cumulative_time": 0.01848912239074707,
+          "current_hypothesis": "1 (based on context analysis)",
+          "metrics": {
+            "exact_match": 0.0,
+            "f1": 0.33333333333333337,
+            "partial_match": 1.0
+          },
+          "final_answer": "1 (based on context analysis)"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,240 @@
+{
+  "examples": [
+    {
+      "question": "What is the capital of the country where the Eiffel Tower is located?",
+      "ground_truth": "Paris",
+      "iterations": [
+        {
+          "pct": 10,
+          "time_s": 2.3,
+          "calls": 1,
+          "hypothesis": "Eiffel Tower is in Paris",
+          "f1": 0.67
+        },
+        {
+          "pct": 20,
+          "time_s": 4.8,
+          "calls": 2,
+          "hypothesis": "Paris is the capital",
+          "f1": 0.8
+        },
+        {
+          "pct": 30,
+          "time_s": 7.2,
+          "calls": 3,
+          "hypothesis": "Paris",
+          "f1": 1.0
+        },
+        {
+          "pct": 40,
+          "time_s": 9.5,
+          "calls": 4,
+          "hypothesis": "Paris",
+          "f1": 1.0
+        },
+        {
+          "pct": 50,
+          "time_s": 12.0,
+          "calls": 5,
+          "hypothesis": "Paris",
+          "f1": 1.0
+        },
+        {
+          "pct": 60,
+          "time_s": 14.3,
+          "calls": 6,
+          "hypothesis": "Paris",
+          "f1": 1.0
+        },
+        {
+          "pct": 70,
+          "time_s": 16.8,
+          "calls": 7,
+          "hypothesis": "Paris",
+          "f1": 1.0
+        },
+        {
+          "pct": 80,
+          "time_s": 19.1,
+          "calls": 8,
+          "hypothesis": "Paris",
+          "f1": 1.0
+        },
+        {
+          "pct": 90,
+          "time_s": 21.5,
+          "calls": 9,
+          "hypothesis": "Paris",
+          "f1": 1.0
+        },
+        {
+          "pct": 100,
+          "time_s": 24.0,
+          "calls": 10,
+          "hypothesis": "Paris",
+          "f1": 1.0
+        }
+      ]
+    },
+    {
+      "question": "Which company did the creator of SpaceX found before Tesla?",
+      "ground_truth": "PayPal",
+      "iterations": [
+        {
+          "pct": 10,
+          "time_s": 2.5,
+          "calls": 1,
+          "hypothesis": "Elon Musk created PayPal",
+          "f1": 0.67
+        },
+        {
+          "pct": 20,
+          "time_s": 5.2,
+          "calls": 2,
+          "hypothesis": "PayPal before Tesla",
+          "f1": 0.8
+        },
+        {
+          "pct": 30,
+          "time_s": 7.8,
+          "calls": 3,
+          "hypothesis": "PayPal",
+          "f1": 1.0
+        },
+        {
+          "pct": 40,
+          "time_s": 10.3,
+          "calls": 4,
+          "hypothesis": "PayPal",
+          "f1": 1.0
+        },
+        {
+          "pct": 50,
+          "time_s": 13.0,
+          "calls": 5,
+          "hypothesis": "PayPal",
+          "f1": 1.0
+        },
+        {
+          "pct": 60,
+          "time_s": 15.5,
+          "calls": 6,
+          "hypothesis": "PayPal",
+          "f1": 1.0
+        },
+        {
+          "pct": 70,
+          "time_s": 18.2,
+          "calls": 7,
+          "hypothesis": "PayPal",
+          "f1": 1.0
+        },
+        {
+          "pct": 80,
+          "time_s": 20.7,
+          "calls": 8,
+          "hypothesis": "PayPal",
+          "f1": 1.0
+        },
+        {
+          "pct": 90,
+          "time_s": 23.3,
+          "calls": 9,
+          "hypothesis": "PayPal",
+          "f1": 1.0
+        },
+        {
+          "pct": 100,
+          "time_s": 26.0,
+          "calls": 10,
+          "hypothesis": "PayPal",
+          "f1": 1.0
+        }
+      ]
+    },
+    {
+      "question": "How many Academy Awards did the director of Inception win?",
+      "ground_truth": "1",
+      "iterations": [
+        {
+          "pct": 10,
+          "time_s": 2.1,
+          "calls": 1,
+          "hypothesis": "Christopher Nolan",
+          "f1": 0.0
+        },
+        {
+          "pct": 20,
+          "time_s": 4.5,
+          "calls": 2,
+          "hypothesis": "Nolan won 1",
+          "f1": 0.8
+        },
+        {
+          "pct": 30,
+          "time_s": 6.9,
+          "calls": 3,
+          "hypothesis": "1",
+          "f1": 1.0
+        },
+        {
+          "pct": 40,
+          "time_s": 9.2,
+          "calls": 4,
+          "hypothesis": "1",
+          "f1": 1.0
+        },
+        {
+          "pct": 50,
+          "time_s": 11.8,
+          "calls": 5,
+          "hypothesis": "1",
+          "f1": 1.0
+        },
+        {
+          "pct": 60,
+          "time_s": 14.2,
+          "calls": 6,
+          "hypothesis": "1",
+          "f1": 1.0
+        },
+        {
+          "pct": 70,
+          "time_s": 16.7,
+          "calls": 7,
+          "hypothesis": "1",
+          "f1": 1.0
+        },
+        {
+          "pct": 80,
+          "time_s": 19.0,
+          "calls": 8,
+          "hypothesis": "1",
+          "f1": 1.0
+        },
+        {
+          "pct": 90,
+          "time_s": 21.5,
+          "calls": 9,
+          "hypothesis": "1",
+          "f1": 1.0
+        },
+        {
+          "pct": 100,
+          "time_s": 24.0,
+          "calls": 10,
+          "hypothesis": "1",
+          "f1": 1.0
+        }
+      ]
+    }
+  ],
+  "aggregate_stats": {
+    "avg_final_f1": 1.0,
+    "avg_final_time": 24.666666666666668,
+    "avg_final_calls": 10.0,
+    "avg_f1_at_20pct": 0.8000000000000002,
+    "quality_ratio_at_20pct": 0.8000000000000002,
+    "demonstrates_80_20": true
+  }
+}
