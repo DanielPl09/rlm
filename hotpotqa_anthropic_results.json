@@ -1,0 +1,56 @@
+[
+  {
+    "question": "Which magazine was started first, Arthur's Magazine or First for Women?",
+    "gold_answer": "Arthur's Magazine",
+    "rlm_answer": "Arthur's Magazine was started first.",
+    "num_slices": 2,
+    "num_calls": 5,
+    "hypothesis_versions": 4,
+    "metrics": {
+      "exact_match": false,
+      "contains_answer": true,
+      "f1_score": 0.5714285714285715
+    },
+    "hypothesis_history": [
+      "Need to answer: Which magazine was started first, Arthur's Magazine or First for Women?",
+      "Need to answer: Which magazine was started first, Arthur's Magazine or First for Women?",
+      "Updated hypothesis: Arthur's Magazine was started in 1844. To determine which magazine started first, I still need information on when First for Women magazine was founded.\n\nI do not have enough information yet to conclusively answer which magazine was started first. More information is needed about the founding date of First for Women magazine."
+    ]
+  },
+  {
+    "question": "The Oberoi family is part of a hotel company that has a head office in what city?",
+    "gold_answer": "Delhi",
+    "rlm_answer": "Delhi.",
+    "num_slices": 2,
+    "num_calls": 5,
+    "hypothesis_versions": 4,
+    "metrics": {
+      "exact_match": false,
+      "contains_answer": true,
+      "f1_score": 0
+    },
+    "hypothesis_history": [
+      "Need to answer: The Oberoi family is part of a hotel company that has a head office in what city?",
+      "Need to answer: The Oberoi family is part of a hotel company that has a head office in what city?",
+      "Updated hypothesis: The Oberoi family is part of a hotel company called The Oberoi Group. The family is Indian, but the location of the company's head office is still unknown based on the information provided so far.\n\nI do not have enough information yet to answer the question \"The Oberoi family is part of a hotel company that has a head office in what city?\". More information is needed about where The Oberoi Group's headquarters is located."
+    ]
+  },
+  {
+    "question": "What is the name of the airport in the city where the 2004 Summer Olympics were held?",
+    "gold_answer": "Eleftherios Venizelos International Airport",
+    "rlm_answer": "Athens International Airport",
+    "num_slices": 2,
+    "num_calls": 5,
+    "hypothesis_versions": 4,
+    "metrics": {
+      "exact_match": false,
+      "contains_answer": false,
+      "f1_score": 0.5714285714285715
+    },
+    "hypothesis_history": [
+      "Need to answer: What is the name of the airport in the city where the 2004 Summer Olympics were held?",
+      "Need to answer: What is the name of the airport in the city where the 2004 Summer Olympics were held?",
+      "Updated hypothesis: The 2004 Summer Olympics were held in Athens, Greece. To answer the question, I still need the name of the airport in Athens.\n\nI do not have enough information yet to provide a final answer to the question \"What is the name of the airport in the city where the 2004 Summer Olympics were held?\". I need to find the specific name of the main airport serving Athens."
+    ]
+  }
+]
