@@ -2,12 +2,13 @@
 Simple Recursive Language Model (RLM) with REPL environment.
 """
 
-from typing import Dict, List, Optional, Any 
+from typing import Dict, List, Optional, Any
 
 from rlm import RLM
 from rlm.repl import REPLEnv
 from rlm.utils.llm import OpenAIClient
 from rlm.utils.prompts import DEFAULT_QUERY, next_action_prompt, build_system_prompt
+from rlm.utils.context_slicer import ContextSlicer
 import rlm.utils.utils as utils
 
 from rlm.logger.root_logger import ColorfulLogger
@@ -44,13 +45,14 @@ class RLM_REPL(RLM):
         self.messages = [] # Initialize messages list
         self.query = None
     
-    def setup_context(self, context: List[str] | str | List[Dict[str, str]], query: Optional[str] = None):
+    def setup_context(self, context: List[str] | str | List[Dict[str, str]], query: Optional[str] = None, enable_slicing: bool = True):
         """
         Setup the context for the RLMClient.
 
         Args:
             context: The large context to analyze in the form of a list of messages, string, or Dict
             query: The user's question
+            enable_slicing: Whether to enable automatic context slicing for iterative refinement
         """
         if query is None:
             query = DEFAULT_QUERY
@@ -61,16 +63,27 @@ class RLM_REPL(RLM):
         # Initialize the conversation with the REPL prompt
         self.messages = build_system_prompt()
         self.logger.log_initial_messages(self.messages)
-        
+
         # Initialize REPL environment with context data
         context_data, context_str = utils.convert_context_for_repl(context)
-        
+
+        # Create context slices for iterative refinement if enabled
+        context_slices = {}
+        if enable_slicing:
+            # Determine which context format to use for slicing
+            slice_input = context_data if context_data is not None else context_str
+            if slice_input is not None:
+                context_slices = ContextSlicer.auto_slice_context(slice_input)
+                if self.logger.enabled:
+                    print(f"📎 Created {len(context_slices)} context slices for iterative refinement")
+
         self.repl_env = REPLEnv(
-            context_json=context_data, 
-            context_str=context_str, 
+            context_json=context_data,
+            context_str=context_str,
             recursive_model=self.recursive_model,
+            context_slices=context_slices,
         )
-        
+
         return self.messages
 
     def completion(self, context: List[str] | str | List[Dict[str, str]], query: Optional[str] = None) -> str:
